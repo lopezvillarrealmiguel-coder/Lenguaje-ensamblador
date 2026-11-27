@@ -2,7 +2,7 @@
 
 .Data
     nombre Byte "Miguel Lopez Villarreal", 0  ;guarda el nombre que se mostrara
-    titulo Byte "Mi programa", 0  ;guarda el titulo de la ventana
+    titulo Byte "Nombre", 0  ;guarda el titulo de la ventana
 
 .Code
 start:
