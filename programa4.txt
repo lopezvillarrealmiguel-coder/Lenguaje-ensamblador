@@ -13,7 +13,7 @@
 start:
     Mov Eax, numero1                 ;carga el primer numero
     Mov Ebx, numero2                 ;carga el segundo numero
-    Mul Ebx                          ;multiplica Eax por Ebx
+    Mul Ebx, Eax                     ;multiplica Eax por Ebx
     Mov resultado, Eax               ;guarda el resultado
 
     Invoke dwtoa, resultado, Addr carga ;convierte el resultado a texto
