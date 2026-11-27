@@ -1,0 +1,22 @@
+.Const
+
+.Data?
+    carga Byte 10 Dup(?)             ;reserva espacio para el resultado
+
+.Data
+    numero1 DWord 0AH                ;(10)
+    numero2 DWord 05H                ;(5)
+    resultado DWord 0H               ;guarda la multiplicacion
+    titulo Byte "Multiplicacion", 0  ;titulo de la ventana
+
+.Code
+start:
+    Mov Eax, numero1                 ;carga el primer numero
+    Mov Ebx, numero2                 ;carga el segundo numero
+    Mul Ebx                          ;multiplica Eax por Ebx
+    Mov resultado, Eax               ;guarda el resultado
+
+    Invoke dwtoa, resultado, Addr carga ;convierte el resultado a texto
+    Invoke MessageBox, 0, Addr carga, Addr titulo, MB_OK ;muestra el resultado
+
+End start

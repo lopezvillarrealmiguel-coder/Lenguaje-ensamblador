@@ -1,0 +1,41 @@
+.Const
+
+.Data?
+    carga Byte 10 Dup(?)             ;reserva espacio para mostrar el resultado
+
+.Data
+    acel DWord 14H                   ;valor de cada lectura (20)
+    cantidad DWord 05H              ;cantidad de lecturas (5)
+    limite DWord 64H                ;valor esperado (100)
+    reduccion DWord 05H             ;cantidad que se resta (5)
+    total DWord 00H                 ;guarda la aceleracion total
+    mensaje1 Byte "Regulando flujo de combustible", 0 ;mensaje si el total no es 100
+    mensaje2 Byte "Velocidad de crucero estabilizada", 0 ;mensaje si el total es 100
+    mensaje3 Byte "Ciclo de control completado", 0 ;mensaje final
+    titulo Byte "Control de turbina", 0 ;titulo de la ventana
+    titulo2 Byte "Aceleracion total", 0 ;titulo del resultado
+
+.Code
+start:
+    Mov Eax, acel                   ;carga la lectura de aceleracion
+    Mov Ebx, cantidad               ;carga la cantidad de lecturas
+    Mul Ebx                         ;multiplica la lectura por cinco
+    Mov total, Eax                  ;guarda la aceleracion total
+
+    Cmp Eax, limite                 ;compara el total con 100
+    Je estable                      ;si son iguales, salta a estable
+
+    Invoke MessageBox, 0, Addr mensaje1, Addr titulo, MB_OK ;muestra el mensaje de regulacion
+    Sub Eax, reduccion              ;resta 5 al total
+    Mov total, Eax                  ;guarda el nuevo total
+    Invoke dwtoa, total, Addr carga ;convierte el total a texto
+    Invoke MessageBox, 0, Addr carga, Addr titulo2, MB_OK ;muestra el total corregido
+    Jmp salida                      ;salta al mensaje final
+
+estable:
+    Invoke MessageBox, 0, Addr mensaje2, Addr titulo, MB_OK ;muestra que la velocidad esta estable
+
+salida:
+    Invoke MessageBox, 0, Addr mensaje3, NULL, MB_OK ;muestra el mensaje final
+
+End start

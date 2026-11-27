@@ -1,0 +1,44 @@
+.Const
+
+.Data?
+    carga Byte 10 Dup(?)             ;reserva espacio para mostrar el resultado
+
+.Data
+    tam1 DWord 14H                   ;tamaño del primer paquete (20)
+    tam2 DWord 14H                   ;tamaño del segundo paquete (20)
+    tam3 DWord 14H                   ;tamaño del tercer paquete (20)
+    tam4 DWord 14H                   ;tamaño del cuarto paquete (20)
+    limite DWord 40H                 ;limite del buffer (64)
+    descarte DWord 10H               ;cantidad que se descarta (16)
+    total DWord 00H                  ;guarda el tamaño total
+    mensaje1 Byte "Buffer seguro: listo para procesar", 0 ;mensaje si el total no supera el limite
+    mensaje2 Byte "Riesgo de desbordamiento: descartando paquete", 0 ;mensaje si se supera el limite
+    mensaje3 Byte "Canal libre", 0   ;mensaje final
+    titulo Byte "Recepcion de paquetes", 0 ;titulo de la ventana
+    titulo2 Byte "Tamaño total", 0   ;titulo del resultado
+
+.Code
+start:
+    Mov Eax, tam1                   ;carga el tamaño del primer paquete
+    Add Eax, tam2                   ;suma el segundo paquete
+    Add Eax, tam3                   ;suma el tercer paquete
+    Add Eax, tam4                   ;suma el cuarto paquete
+    Mov total, Eax                  ;guarda el tamaño total
+
+    Cmp Eax, limite                 ;compara el total con 64
+    Jg riesgo                      ;si es mayor, salta a riesgo
+
+    Invoke MessageBox, 0, Addr mensaje1, Addr titulo, MB_OK ;muestra que el buffer es seguro
+    Jmp salida                      ;salta al mensaje final
+
+riesgo:
+    Invoke MessageBox, 0, Addr mensaje2, Addr titulo, MB_OK ;muestra la advertencia
+    Sub Eax, descarte               ;resta 16 al tamaño total
+    Mov total, Eax                  ;guarda el total corregido
+    Invoke dwtoa, total, Addr carga ;convierte el total a texto
+    Invoke MessageBox, 0, Addr carga, Addr titulo2, MB_OK ;muestra el total corregido
+
+salida:
+    Invoke MessageBox, 0, Addr mensaje3, NULL, MB_OK ;muestra el mensaje final
+
+End start
