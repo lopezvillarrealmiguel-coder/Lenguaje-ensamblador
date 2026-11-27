@@ -1,0 +1,43 @@
+.Const
+
+.Data?
+    carga Byte 10 Dup(?)             ;reserva espacio para mostrar el resultado
+
+.Data
+    temp_subida DWord 14H           ;aumento de temperatura por hilo (20)
+    cantidad DWord 04H              ;cantidad de hilos (4)
+    limite DWord 50H                ;limite de temperatura (80)
+    reduccion DWord 0FH             ;reduccion de temperatura (15)
+    total DWord 00H                 ;guarda la temperatura total
+    mensaje1 Byte "Peligro: refrigeracion liquida al maximo", 0 ;mensaje si supera el limite
+    mensaje2 Byte "Temperatura dentro de rango seguro", 0 ;mensaje si no supera el limite
+    mensaje3 Byte "Lectura del socket finalizada", 0 ;mensaje final
+    titulo Byte "Temperatura", 0    ;titulo de la ventana
+    titulo2 Byte "Temperatura total", 0 ;titulo del resultado
+
+.Code
+start:
+    Mov Eax, temp_subida            ;carga el aumento de temperatura
+    Mov Ebx, cantidad               ;carga la cantidad de hilos
+    Mul Ebx                         ;multiplica el aumento por cuatro
+    Mov total, Eax                  ;guarda la temperatura total
+
+    Cmp Eax, limite                 ;compara el total con 80
+    Jg peligro                      ;si es mayor, salta a peligro
+
+    Invoke MessageBox, 0, Addr mensaje2, Addr titulo, MB_OK ;muestra que esta dentro del rango
+    Invoke dwtoa, total, Addr carga ;convierte la temperatura a texto
+    Invoke MessageBox, 0, Addr carga, Addr titulo2, MB_OK ;muestra la temperatura total
+    Jmp salida                      ;salta al mensaje final
+
+peligro:
+    Sub Eax, reduccion              ;resta 15 a la temperatura
+    Mov total, Eax                  ;guarda la temperatura corregida
+    Invoke MessageBox, 0, Addr mensaje1, Addr titulo, MB_OK ;muestra la advertencia
+    Invoke dwtoa, total, Addr carga ;convierte la temperatura a texto
+    Invoke MessageBox, 0, Addr carga, Addr titulo2, MB_OK ;muestra la temperatura corregida
+
+salida:
+    Invoke MessageBox, 0, Addr mensaje3, NULL, MB_OK ;muestra el mensaje final
+
+End start

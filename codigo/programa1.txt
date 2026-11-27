@@ -1,0 +1,11 @@
+.Const
+
+.Data
+    nombre Byte "Miguel Lopez Villarreal", 0  ;guarda el nombre que se mostrara
+    titulo Byte "Mi programa", 0  ;guarda el titulo de la ventana
+
+.Code
+start:
+    Invoke MessageBox, 0, Addr nombre, Addr titulo, MB_OK ;muestra el nombre
+
+End start

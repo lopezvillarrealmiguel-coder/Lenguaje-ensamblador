@@ -1,0 +1,21 @@
+.Const
+
+.Data?
+    carga Byte 10 Dup(?)             ;reserva espacio para el resultado
+
+.Data
+    numero1 DWord 0AH                ;primer numero (10)
+    numero2 DWord 03H                ;segundo numero (3)
+    resultado DWord 0H               ;guarda la resta
+    titulo Byte "Resta", 0           ;titulo de la ventana
+
+.Code
+start:
+    Mov Eax, numero1                 ;carga el primer numero
+    Sub Eax, numero2                 ;resta el segundo numero
+    Mov resultado, Eax               ;guarda el resultado
+
+    Invoke dwtoa, resultado, Addr carga ;convierte el resultado a texto
+    Invoke MessageBox, 0, Addr carga, Addr titulo, MB_OK ;muestra el resultado
+
+End start

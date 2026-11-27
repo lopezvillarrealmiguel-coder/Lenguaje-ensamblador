@@ -1,0 +1,40 @@
+.Const
+
+.Data?
+    carga Byte 10 Dup(?)             ;reserva espacio para mostrar el resultado
+
+.Data
+    fallos1 DWord 01H               ;intentos fallidos del primer bloque (1)
+    fallos2 DWord 02H               ;intentos fallidos del segundo bloque (2)
+    fallos3 DWord 00H               ;intentos fallidos del tercer bloque (0)
+    alertas DWord 00H               ;contador de alertas (0)
+    total DWord 00H                 ;guarda la suma de intentos
+    mensaje1 Byte "Alerta: actividad sospechosa detectada", 0 ;mensaje si hubo intentos fallidos
+    mensaje2 Byte "Acceso sin incidentes", 0 ;mensaje si no hubo intentos fallidos
+    mensaje3 Byte "Fin de auditoria", 0 ;mensaje final
+    titulo Byte "Auditoria", 0      ;titulo de la ventana
+    titulo2 Byte "Total de fallos", 0 ;titulo del total
+
+.Code
+start:
+    Mov Eax, fallos1                ;carga los intentos del primer bloque
+    Add Eax, fallos2                ;suma los intentos del segundo bloque
+    Add Eax, fallos3                ;suma los intentos del tercer bloque
+    Mov total, Eax                  ;guarda el total de intentos
+
+    Cmp Eax, 00H                    ;compara el total con cero
+    Jne alerta                      ;si no es cero, salta a alerta
+
+    Invoke MessageBox, 0, Addr mensaje2, Addr titulo, MB_OK ;muestra que no hubo incidentes
+    Jmp salida                      ;salta al mensaje final
+
+alerta:
+    Add alertas, 01H                ;aumenta el contador de alertas
+    Invoke MessageBox, 0, Addr mensaje1, Addr titulo, MB_OK ;muestra la alerta
+    Invoke dwtoa, total, Addr carga ;convierte el total a texto
+    Invoke MessageBox, 0, Addr carga, Addr titulo2, MB_OK ;muestra el total de fallos
+
+salida:
+    Invoke MessageBox, 0, Addr mensaje3, NULL, MB_OK ;muestra el mensaje final
+
+End start

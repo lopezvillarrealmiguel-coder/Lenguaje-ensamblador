@@ -1,0 +1,24 @@
+.Const
+
+.Data
+    edad DWord 14H                   ;edad de la persona (20)
+    limite DWord 12H                 ;edad minima (18)
+    mensaje1 Byte "No puede pasar", 0 ;mensaje para menores de edad
+    mensaje2 Byte "Si puede pasar", 0 ;mensaje para mayores de edad
+    titulo Byte "Acceso", 0          ;titulo de la ventana
+
+.Code
+start:
+    Mov Eax, edad                    ;carga la edad
+    Cmp Eax, limite                 ;compara la edad con 18
+    Jge permitir                    ;si es mayor o igual, permite el acceso
+
+    Invoke MessageBox, 0, Addr mensaje1, Addr titulo, MB_OK ;muestra que no puede pasar
+    Jmp salida                      ;salta al final
+
+permitir:
+    Invoke MessageBox, 0, Addr mensaje2, Addr titulo, MB_OK ;muestra que puede pasar
+
+salida:
+
+End start

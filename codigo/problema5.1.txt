@@ -1,0 +1,18 @@
+.Const
+
+.Data?
+    carga Byte 10 Dup(?)             ;reserva espacio para mostrar el resultado
+
+.Data
+    resultado DWord 0H               ;guarda el valor de Eax
+    titulo Byte "Valor inicial", 0   ;titulo de la ventana
+
+.Code
+start:
+    Mov Eax, 19H                     ;carga el valor inicial (25)
+    Mov resultado, Eax               ;copia el valor de Eax a resultado
+
+    Invoke dwtoa, resultado, Addr carga ;convierte el valor a texto
+    Invoke MessageBox, 0, Addr carga, Addr titulo, MB_OK ;muestra el resultado
+
+End start

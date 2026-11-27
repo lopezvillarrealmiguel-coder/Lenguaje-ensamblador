@@ -1,0 +1,43 @@
+.Const
+
+.Data?
+    carga Byte 10 Dup(?)             ;reserva espacio para mostrar el resultado
+
+.Data
+    xp1 DWord 1EH                    ;experiencia del primer enemigo (30)
+    xp2 DWord 23H                    ;experiencia del segundo enemigo (35)
+    xp3 DWord 19H                    ;experiencia del tercer enemigo (25)
+    xp4 DWord 28H                    ;experiencia del cuarto enemigo (40)
+    limite DWord 78H                 ;experiencia necesaria (120)
+    nivel DWord 01H                  ;nivel inicial (1)
+    total DWord 00H                  ;guarda la experiencia total
+    mensaje1 Byte "Subiste de nivel!", 0 ;mensaje si se alcanza la experiencia necesaria
+    mensaje2 Byte "Puntos acumulados: nivel insuficiente", 0 ;mensaje si faltan puntos
+    mensaje3 Byte "Guardando progreso del juego", 0 ;mensaje final
+    titulo Byte "Experiencia", 0     ;titulo de la ventana
+    titulo2 Byte "Experiencia total", 0 ;titulo del resultado
+
+.Code
+start:
+    Mov Eax, xp1                    ;carga la experiencia del primer enemigo
+    Add Eax, xp2                    ;suma la experiencia del segundo enemigo
+    Add Eax, xp3                    ;suma la experiencia del tercer enemigo
+    Add Eax, xp4                    ;suma la experiencia del cuarto enemigo
+    Mov total, Eax                  ;guarda la experiencia total
+
+    Cmp Eax, limite                 ;compara la experiencia con 120
+    Jge subir                       ;si es mayor o igual, sube de nivel
+
+    Invoke MessageBox, 0, Addr mensaje2, Addr titulo, MB_OK ;muestra que faltan puntos
+    Invoke dwtoa, total, Addr carga ;convierte la experiencia a texto
+    Invoke MessageBox, 0, Addr carga, Addr titulo2, MB_OK ;muestra la experiencia total
+    Jmp salida                      ;salta al mensaje final
+
+subir:
+    Add nivel, 01H                  ;aumenta el nivel en uno
+    Invoke MessageBox, 0, Addr mensaje1, Addr titulo, MB_OK ;muestra que subio de nivel
+
+salida:
+    Invoke MessageBox, 0, Addr mensaje3, NULL, MB_OK ;muestra el mensaje final
+
+End start
